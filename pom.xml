@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>groupId</groupId>
-    <artifactId>MiniJava</artifactId>
+    <artifactId>experiment-8</artifactId>
     <version>0.1.2</version>
 
     <build>
