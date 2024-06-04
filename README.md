@@ -34,3 +34,28 @@ Argument --> , GenExpression Argument | lambda
 Identifier --> <IDENTIFIER_LITERAL>
 Integer --> <INTEGER_LITERAL>
 ```
+
+الگوی Facade برای ارائه یک رابط ساده به یک زیرسیستم پیچیده استفاده می شود. در کد ارائه شده، کلاس «Parser» به عنوان یک Facade عمل می کند و تعاملات با زیرسیستم های درگیر در تجزیه(parse) و تولید کد(code generation) را ساده می کند.
+
+در اینجا دو مورد وجود دارد که الگوی Facade در کد کلاس Parser اعمال می شود:
+
+1. **تعامل با تحلیلگر واژگانی(Lexical Analyzer)**:
+ - در کلاس «Parser»، زیر سیستم تحلیل واژگانی از طریق نمونه(instance) «lexicalAnalyzer» قابل دسترسی است. کلاس «Parser» یک رابط ساده برای دریافت نشانه(token) بعدی از ورودی با استفاده از تابع «()lexicalAnalyzer.getNextToken» ارائه می‌کند. جزئیات نحوه تجزیه و تحلیل و تولید توکن ها ازکلاینت پنهان است (در این مورد، خود کلاس «Parser»). کلاس «lexicalAnalyzer» مستقیماً با استفاده از کلاس «Parser» در معرض کلاینت قرار نمی گیرد.
+
+ ``java
+ lexicalAnalyzer = new lexicalAnalyzer(sc);
+ Token lookAhead = lexicalAnalyzer.getNextToken();
+ ```
+
+2. **تعامل با مولد کد(Code Generator)**:
+ - به طور مشابه، زیرسیستم تولید کد از طریق نمونه «CodeGenerator» قابل دسترسی است. کلاس «Parser» یک رابط ساده برای انجام اقدامات معنایی(semantics) از طریق تابع «cg.semanticFunction(rule.semanticAction, lookAhead)» ارائه می‌کند. پیچیدگی نحوه تولید کد بر اساس اقدامات معنایی در کلاس 'CodeGenerator' محصور شده است و کلاس 'Parser' به عنوان نمای(facade) برای این زیرسیستم عمل می کند.
+
+ ``java
+ cg = new CodeGenerator();
+ ...
+ try {
+ cg.semanticFunction(rule.semanticAction، lookAhead);
+ } catch (Exception e) {
+ Log.print ("Code Generator Error");
+ }
+ ```
